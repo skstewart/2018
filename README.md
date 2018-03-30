@@ -1,4 +1,4 @@
 # 2018
-cs311 (Formal Languages & Automata)
-cs264 (Computer Organization & Assembly Programming)
+cs311 (Formal Languages & Automata)<br>
+cs264 (Computer Organization & Assembly Programming)<br>
 cs365 (Computer Architecture)
