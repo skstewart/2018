@@ -31,7 +31,7 @@ public class Driver {
 //  Description: Creates new StateMachine object; takes the input file which is formatted to correctly be used,
 //  and sets up a state machine with specified states, final states, transitions, and test strings to be tested
 //  to determine whether they are contained within the language. determines whether the strings are accepted or rejected.
-//  loops through each machine and set of instructions (each different machine separated by "/////" or some other separator,
+//  loops through each machine and set of instructions (each different machine separated by "/////",
 //  until the end of the file is reached. Finally, it exits the program upon reaching the end of the file.
     public static void main(String[] args) throws FileNotFoundException {
         StateMachine fsm = new StateMachine();
@@ -41,27 +41,31 @@ public class Driver {
         int count = 1;
         String accepted = "Rejected";
         int fin;
+        String[] tempArray;
 
         try (Scanner inputFile = new Scanner(new File("input.dat"))) {
-            while (inputFile.hasNext()) {
+            while (inputFile.hasNext()) {   //until we reach the end of the file
                 System.out.println("Finite State Automaton #" + count++);
-                temp = inputFile.nextLine();
-                fsm.states = Integer.parseInt(temp);
+                temp = inputFile.nextLine();    //begin reading in
+                fsm.states = Integer.parseInt(temp);    
                 System.out.println("Number of states: " + fsm.states);
-                fsm.finalStates = new boolean[fsm.states];
-                Arrays.fill(fsm.finalStates, false);
+                
+                fsm.finalStates = new boolean[fsm.states];  //creates boolean array size of # of states; true if final, false if not
+                
+                Arrays.fill(fsm.finalStates, false);    //initializes the array to be filled with "false"
+                
                 temp = inputFile.nextLine();
                 System.out.println("Final states: " + temp);
-                String[] tempArray;
-                tempArray = temp.split(",");
+                
+                tempArray = temp.split(",");    //splits the line at each comma
 
                 for (String tempArray1 : tempArray) { //make final states read from file true
-                    fsm.finalStates[Integer.parseInt(tempArray1)] = true;
+                    fsm.finalStates[Integer.parseInt(tempArray1)] = true;     //inserts the final states read from file
                 }
                 temp = inputFile.nextLine();
 
                 System.out.println("Alphabet: " + temp);
-                fsm.alphabet = temp.split("\\s+");
+                fsm.alphabet = temp.split("\\s+"); //splits the alphabet into one-character strings
 
                 fsm.transitions = new int[fsm.alphabet.length][fsm.states];
 
@@ -69,9 +73,10 @@ public class Driver {
                 temp = inputFile.nextLine();
                 while (temp.startsWith("(")) { //takes in transitions from file of form ( p q s ) and sets to transitions array.
 
-                    transition = temp.split("\\s+");
-
-                    fsm.transitions[fsm.getAlphabetIndex(transition[2])][Integer.parseInt(transition[1])] = Integer.parseInt(transition[3]);  //transitions[key][currentstate] = [nextstate]
+                    transition = temp.split("\\s+");    //split the string into chunks separated by spaces
+    
+                    //transitions[key][currentstate] = [nextstate]
+                    fsm.transitions[fsm.getAlphabetIndex(transition[2])][Integer.parseInt(transition[1])] = Integer.parseInt(transition[3]);  
 
                     temp = inputFile.nextLine();
                 } //end while loop responsible for setting transitions
@@ -82,26 +87,26 @@ public class Driver {
                 while (!"/////".equals(temp)) {     //this while loop goes until it reaches the separator "/////"
                     System.out.printf("%-50s", temp);
 
-                    temp = temp.toLowerCase();
-                    testString = temp.split("");
+                    temp = temp.toLowerCase();      //convert the string to lowercase for ease of testing
+                    testString = temp.split("");    //split the test string into one-character strings
                     fin = fsm.inLanguage(testString);
 
                     if (fsm.finalStates[fin] == true) {
                         accepted = "Accepted";
                     }
 
-                    System.out.printf("%30s", accepted + "\n"); //printes out whether it is accepted or rejected
+                    System.out.printf("%30s", accepted + "\n"); //prints out whether it is accepted or rejected
 
                     temp = inputFile.nextLine();
-                    accepted = "Rejected";
+                    accepted = "Rejected";  //the default
                 }
 
-                System.out.print("\n");
+                System.out.print("\n"); //new line
             }
-            inputFile.close();
+            inputFile.close(); //close the file
         }
         
-        System.out.println("Thank you for using my program!");
+        System.out.println("Thank you for using my program!");  //end program
     }
 
 }
